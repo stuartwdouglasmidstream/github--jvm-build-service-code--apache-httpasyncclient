@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -85,11 +86,13 @@ import org.apache.http.impl.client.TargetAuthenticationStrategy;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.DefaultRoutePlanner;
 import org.apache.http.impl.conn.DefaultSchemePortResolver;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.impl.cookie.DefaultCookieSpecProvider;
 import org.apache.http.impl.cookie.IgnoreSpecProvider;
 import org.apache.http.impl.cookie.NetscapeDraftSpecProvider;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.impl.nio.conn.ManagedNHttpClientConnectionFactory;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.NHttpClientEventHandler;
@@ -187,6 +190,8 @@ public class HttpAsyncClientBuilder {
 
     private int maxConnTotal = 0;
     private int maxConnPerRoute = 0;
+    private long connTimeToLive = -1;
+    private TimeUnit connTimeToLiveTimeUnit = TimeUnit.MILLISECONDS;
 
     public static HttpAsyncClientBuilder create() {
         return new HttpAsyncClientBuilder();
@@ -266,6 +271,20 @@ public class HttpAsyncClientBuilder {
      */
     public final HttpAsyncClientBuilder setMaxConnPerRoute(final int maxConnPerRoute) {
         this.maxConnPerRoute = maxConnPerRoute;
+        return this;
+    }
+
+    /**
+     * Sets maximum time to live for persistent connections
+     * <p>
+     * Please note this value can be overridden by the {@link #setConnectionManager(
+     *   org.apache.http.nio.conn.NHttpClientConnectionManager)} method.
+     *
+     * @since 4.1
+     */
+    public final HttpAsyncClientBuilder setConnectionTimeToLive(final long connTimeToLive, final TimeUnit connTimeToLiveTimeUnit) {
+        this.connTimeToLive = connTimeToLive;
+        this.connTimeToLiveTimeUnit = connTimeToLiveTimeUnit;
         return this;
     }
 
@@ -668,10 +687,15 @@ public class HttpAsyncClientBuilder {
                 defaultIOReactorConfig != null ? defaultIOReactorConfig : IOReactorConfig.DEFAULT, threadFactory);
             final PoolingNHttpClientConnectionManager poolingmgr = new PoolingNHttpClientConnectionManager(
                     ioReactor,
+                    ManagedNHttpClientConnectionFactory.INSTANCE,
                     RegistryBuilder.<SchemeIOSessionStrategy>create()
                         .register("http", NoopIOSessionStrategy.INSTANCE)
                         .register("https", sslStrategy)
-                        .build());
+                        .build(),
+                    DefaultSchemePortResolver.INSTANCE,
+                    SystemDefaultDnsResolver.INSTANCE,
+                    connTimeToLive,
+                    connTimeToLiveTimeUnit);
             if (defaultConnectionConfig != null) {
                 poolingmgr.setDefaultConnectionConfig(defaultConnectionConfig);
             }
