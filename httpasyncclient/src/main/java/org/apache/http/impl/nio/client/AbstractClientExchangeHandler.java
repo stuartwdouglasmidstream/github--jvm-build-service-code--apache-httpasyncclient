@@ -45,6 +45,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.RouteTracker;
+import org.apache.http.impl.conn.ConnectionShutdownException;
 import org.apache.http.nio.NHttpClientConnection;
 import org.apache.http.nio.conn.NHttpClientConnectionManager;
 import org.apache.http.nio.protocol.HttpAsyncClientExchangeHandler;
@@ -334,6 +335,8 @@ abstract class AbstractClientExchangeHandler implements HttpAsyncClientExchangeH
                     managedConn.requestOutput();
                 }
             }
+        } catch (final ConnectionShutdownException runex) {
+            failed(runex);
         } catch (final RuntimeException runex) {
             failed(runex);
             throw runex;
