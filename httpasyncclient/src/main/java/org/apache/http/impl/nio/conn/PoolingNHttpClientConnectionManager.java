@@ -303,8 +303,10 @@ public class PoolingNHttpClientConnectionManager
                             log.debug("Connection leased: " + format(entry) + formatStats(entry.getRoute()));
                         }
                         final NHttpClientConnection managedConn = CPoolProxy.newProxy(entry);
-                        if (!resultFuture.completed(managedConn)) {
-                            pool.release(entry, true);
+                        synchronized (managedConn) {
+                            if (!resultFuture.completed(managedConn)) {
+                                pool.release(entry, true);
+                            }
                         }
                     }
 
