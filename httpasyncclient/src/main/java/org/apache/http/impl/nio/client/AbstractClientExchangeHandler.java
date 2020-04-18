@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.logging.Log;
 import org.apache.http.ConnectionClosedException;
 import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -402,6 +403,8 @@ abstract class AbstractClientExchangeHandler implements HttpAsyncClientExchangeH
 
                 }));
     }
+
+    abstract void start() throws HttpException, IOException;
 
     abstract void releaseResources();
 

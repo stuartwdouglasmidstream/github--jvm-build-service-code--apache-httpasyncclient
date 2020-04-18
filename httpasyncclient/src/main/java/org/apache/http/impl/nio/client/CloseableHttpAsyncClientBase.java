@@ -27,6 +27,7 @@
 package org.apache.http.impl.nio.client;
 
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.nio.NHttpClientEventHandler;
 import org.apache.http.nio.conn.NHttpClientConnectionManager;
 import org.apache.http.nio.reactor.IOEventDispatch;
-import org.apache.http.util.Asserts;
 
 abstract class CloseableHttpAsyncClientBase extends CloseableHttpPipeliningClient {
 
@@ -85,12 +85,6 @@ abstract class CloseableHttpAsyncClientBase extends CloseableHttpPipeliningClien
         }
     }
 
-    protected void ensureRunning() {
-        final Status currentStatus = this.status.get();
-        Asserts.check(currentStatus == Status.ACTIVE, "Request cannot be executed; " +
-                "I/O reactor status: %s", currentStatus);
-    }
-
     @Override
     public void close() {
         if (this.status.compareAndSet(Status.ACTIVE, Status.STOPPED)) {
@@ -112,6 +106,17 @@ abstract class CloseableHttpAsyncClientBase extends CloseableHttpPipeliningClien
     @Override
     public boolean isRunning() {
         return this.status.get() == Status.ACTIVE;
+    }
+
+    final void execute(final AbstractClientExchangeHandler handler) {
+        try {
+            if (!isRunning()) {
+                throw new CancellationException("Request execution cancelled");
+            }
+            handler.start();
+        } catch (final Exception ex) {
+            handler.failed(ex);
+        }
     }
 
 }

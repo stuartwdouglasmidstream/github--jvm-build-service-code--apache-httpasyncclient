@@ -170,6 +170,7 @@ class PipeliningClientExchangeHandlerImpl<T> extends AbstractClientExchangeHandl
         return cancelled;
     }
 
+    @Override
     public void start() throws HttpException, IOException {
         if (this.log.isDebugEnabled()) {
             this.log.debug("[exchange: " + getId() + "] start execution");

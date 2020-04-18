@@ -90,7 +90,6 @@ class MinimalHttpAsyncClient extends CloseableHttpAsyncClientBase {
             final HttpAsyncResponseConsumer<T> responseConsumer,
             final HttpContext context,
             final FutureCallback<T> callback) {
-        ensureRunning();
         final BasicFuture<T> future = new BasicFuture<T>(callback);
         final HttpClientContext localcontext = HttpClientContext.adapt(
             context != null ? context : new BasicHttpContext());
@@ -105,11 +104,7 @@ class MinimalHttpAsyncClient extends CloseableHttpAsyncClientBase {
             this.httpProcessor,
             this.connReuseStrategy,
             this.keepaliveStrategy);
-        try {
-            handler.start();
-        } catch (final Exception ex) {
-            handler.failed(ex);
-        }
+        execute(handler);
         return new FutureWrapper<T>(future, handler);
     }
 
@@ -120,7 +115,6 @@ class MinimalHttpAsyncClient extends CloseableHttpAsyncClientBase {
             final List<? extends HttpAsyncResponseConsumer<T>> responseConsumers,
             final HttpContext context,
             final FutureCallback<List<T>> callback) {
-        ensureRunning();
         final BasicFuture<List<T>> future = new BasicFuture<List<T>>(callback);
         final HttpClientContext localcontext = HttpClientContext.adapt(
                 context != null ? context : new BasicHttpContext());
@@ -135,11 +129,7 @@ class MinimalHttpAsyncClient extends CloseableHttpAsyncClientBase {
                 this.httpProcessor,
                 this.connReuseStrategy,
                 this.keepaliveStrategy);
-        try {
-            handler.start();
-        } catch (final Exception ex) {
-            handler.failed(ex);
-        }
+        execute(handler);
         return new FutureWrapper<List<T>>(future, handler);
     }
 

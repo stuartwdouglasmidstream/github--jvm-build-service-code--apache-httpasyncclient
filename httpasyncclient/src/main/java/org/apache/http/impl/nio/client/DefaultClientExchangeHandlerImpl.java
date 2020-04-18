@@ -118,6 +118,7 @@ class DefaultClientExchangeHandlerImpl<T> extends AbstractClientExchangeHandler 
         return cancelled;
     }
 
+    @Override
     public void start() throws HttpException, IOException {
         final HttpHost target = this.requestProducer.getTarget();
         final HttpRequest original = this.requestProducer.generateRequest();
