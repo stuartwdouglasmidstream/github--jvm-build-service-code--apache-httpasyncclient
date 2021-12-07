@@ -63,14 +63,23 @@ import org.apache.http.util.TextUtils;
  */
 public class SSLIOSessionStrategy implements SchemeIOSessionStrategy {
 
+    /**
+     * @deprecated Do not use.
+     */
     @Deprecated
     public static final X509HostnameVerifier ALLOW_ALL_HOSTNAME_VERIFIER =
             new AllowAllHostnameVerifier();
 
+    /**
+     * @deprecated Do not use.
+     */
     @Deprecated
     public static final X509HostnameVerifier BROWSER_COMPATIBLE_HOSTNAME_VERIFIER =
             new BrowserCompatHostnameVerifier();
 
+    /**
+     * @deprecated Do not use.
+     */
     @Deprecated
     public static final X509HostnameVerifier STRICT_HOSTNAME_VERIFIER =
             new StrictHostnameVerifier();

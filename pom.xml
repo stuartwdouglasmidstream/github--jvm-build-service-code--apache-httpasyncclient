@@ -25,12 +25,11 @@
    <http://www.apache.org />.
  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-      <artifactId>project</artifactId>
-      <groupId>org.apache.httpcomponents</groupId>
-      <version>7</version>
-      <relativePath>../project/pom.xml</relativePath>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpcomponents-parent</artifactId>
+    <version>11</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>httpcomponents-asyncclient</artifactId>
   <name>Apache HttpComponents AsyncClient</name>
   <version>4.1.5-SNAPSHOT</version>
@@ -73,7 +72,6 @@
     <junit.version>4.11</junit.version>
     <easymock.version>2.5.2</easymock.version>
     <mockito.version>1.8.5</mockito.version>
-    <hc.stylecheck.version>1</hc.stylecheck.version>
     <api.comparison.version>4.0</api.comparison.version>
   </properties>
 
@@ -186,8 +184,8 @@
           <source>${maven.compiler.source}</source>
           <links>
             <link>http://docs.oracle.com/javase/6/docs/api/</link>
-            <link>http://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/</link>
-            <link>http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/</link>
+            <link>https://hc.apache.org/httpcomponents-core-4.4.x/current/httpcore/apidocs/</link>
+            <link>https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/</link>
           </links>
         </configuration>
       </plugin>
@@ -197,69 +195,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.9.1</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>hc-stylecheck</artifactId>
-            <version>${hc.stylecheck.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
-          <encoding>UTF-8</encoding>
+          <configLocation>hc-stylecheck/default.xml</configLocation>
+          <headerLocation>hc-stylecheck/asl2.header</headerLocation>
+          <consoleOutput>true</consoleOutput>
+          <failsOnError>true</failsOnError>
+          <linkXRef>false</linkXRef>
+          <sourceDirectories>
+            <sourceDirectory>${basedir}/src/main/</sourceDirectory>
+            <sourceDirectory>${basedir}/src/test</sourceDirectory>
+          </sourceDirectories>
+          <excludes>**/java-deprecated/**</excludes>
         </configuration>
-        <executions>
-          <execution>
-            <id>validate-main</id>
-            <phase>validate</phase>
-            <configuration>
-              <configLocation>hc-stylecheck/default.xml</configLocation>
-              <headerLocation>hc-stylecheck/asl2.header</headerLocation>
-              <consoleOutput>true</consoleOutput>
-              <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
-              <sourceDirectory>${basedir}/src/main</sourceDirectory>
-            </configuration>
-            <goals>
-              <goal>checkstyle</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>validate-test</id>
-            <phase>validate</phase>
-            <configuration>
-              <configLocation>hc-stylecheck/default.xml</configLocation>
-              <headerLocation>hc-stylecheck/asl2.header</headerLocation>
-              <consoleOutput>true</consoleOutput>
-              <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
-              <sourceDirectory>${basedir}/src/test</sourceDirectory>
-            </configuration>
-            <goals>
-              <goal>checkstyle</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>validate-examples</id>
-            <phase>validate</phase>
-            <configuration>
-              <configLocation>hc-stylecheck/minimal.xml</configLocation>
-              <headerLocation>hc-stylecheck/asl2.header</headerLocation>
-              <consoleOutput>true</consoleOutput>
-              <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
-              <sourceDirectory>${basedir}/src/examples</sourceDirectory>
-            </configuration>
-            <goals>
-              <goal>checkstyle</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
-        <version>${hc.clirr.version}</version>
         <configuration>
           <comparisonVersion>${api.comparison.version}</comparisonVersion>
         </configuration>
@@ -267,7 +218,6 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.12</version>
         <executions>
           <execution>
             <phase>verify</phase>
@@ -289,22 +239,30 @@
 
   <reporting>
     <plugins>
-
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>${hc.project-info.version}</version>
         <inherited>false</inherited>
         <reportSets>
           <reportSet>
             <reports>
+              <report>dependency-info</report>
               <report>dependency-management</report>
-              <report>issue-tracking</report>
-              <report>license</report>
+              <report>issue-management</report>
+              <report>licenses</report>
+              <report>mailing-lists</report>
               <report>scm</report>
               <report>summary</report>
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <configuration>
+          <comparisonVersion>${api.comparison.version}</comparisonVersion>
+        </configuration>
       </plugin>
 
     </plugins>
