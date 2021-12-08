@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpcomponents-asyncclient</artifactId>
-    <version>4.1.5-SNAPSHOT</version>
+    <version>4.1.5</version>
   </parent>
   <artifactId>httpasyncclient-osgi</artifactId>
   <name>Apache HttpAsyncClient OSGi bundle</name>
@@ -120,7 +120,7 @@
             org.apache.http.ssl;version=${httpcore.osgi.import.version},
             *
             </Import-Package>
-            <Include-Resource />
+            <Include-Resource/>
             <!-- Stop the JAVA_1_n_HOME variables from being treated as headers by Bnd -->
             <_removeheaders>JAVA_1_3_HOME,JAVA_1_4_HOME</_removeheaders>
           </instructions>
