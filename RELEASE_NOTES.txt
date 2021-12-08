@@ -1,7 +1,7 @@
 Release 4.1.5
 -------------------
 
-This is a maintenance release that fixes a number of issues discovered since 4.1.4
+This is a maintenance release that fixes a number of issues discovered since 4.1.4.
 
 Changelog
 -------------------
@@ -17,7 +17,7 @@ Changelog
   completion and cancellation.
   Contributed by Oleg Kalnichevski <olegk at apache.org>
 
-* HTTPASYNC-155: Runtime exception in AbstractClientExchangeHandler can cause the i/o reactor
+* HTTPASYNC-155: Runtime exception in AbstractClientExchangeHandler can cause the I/O reactor
   to shut down.
   Contributed by Oleg Kalnichevski <olegk at apache.org>
 
