@@ -1,3 +1,38 @@
+Release 4.1.5
+-------------------
+
+This is a maintenance release that fixes a number of issues discovered since 4.1.4
+
+Changelog
+-------------------
+
+* Upgraded HttpCore to version 4.4.15 and HttpClient to version 4.5.13.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* HTTPASYNC-160: HttpAsyncClient in INACTIVE or STOPPED state throws a IllegalStateException
+  causing the current thread to terminate.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* HTTPASYNC-156: Possible deadlock condition in case of concurrent connection request
+  completion and cancellation.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* HTTPASYNC-155: Runtime exception in AbstractClientExchangeHandler can cause the i/o reactor
+  to shut down.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* Added connection time to live parameter to HttpAsyncClientBuilder.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* Bug fix: PipeliningClientExchangeHandlerImpl to fail result future in case of an execution
+  failure.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+* HTTPASYNC-152: InternalIODispatch#createConnection to throw CancelledKeyException instead
+  of IllegalStateException.
+  Contributed by Oleg Kalnichevski <olegk at apache.org>
+
+
 Release 4.1.4
 -------------------
 
